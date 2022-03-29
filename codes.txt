@@ -1,0 +1,18 @@
+router.put("/parcel/:parcelId/cancel", (req, res) => {
+  const id = req.params.parcelId;
+  
+  parcel.updateOne({ _id: id }, {
+      isCancelled: req.body.isCancelled,
+    })
+  .then(() => {
+   parcel.findOne({_id: id })
+   .then(result =>res.send(result))
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json({
+      error: err,
+      message:`server error`
+    });
+  });
+});
