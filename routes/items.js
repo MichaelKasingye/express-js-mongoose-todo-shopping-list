@@ -1,18 +1,18 @@
 import express from "express";
-import Item from '../models/Item';
+import {ItemModel} from '../models/Item.js';
 
  const router = express.Router();
 
 
 router.get('/',(req,res)=>{
-Item.find()
+  ItemModel.find()
 .sort({date:-1})
 .then(items => res.json(items));
 });
 
 
 router.delete('/:id', (req,res)=>{
-  Item.findById(req.params.id)
+  ItemModel.findById(req.params.id)
    .then(item =>item.remove()
    .then(()=> res.json({Success:true})))
    .catch(err=> res.status(404).json({ Success:false}));
@@ -20,29 +20,43 @@ router.delete('/:id', (req,res)=>{
     
 
   router.post('/',(req,res)=>{
-    const newItem = new Item({
+    const newItem = new ItemModel({
         name: req.body.name
     });
-    newItem.save().then(item => res.json(item));
+    newItem
+    .save()
+    .then(item => res.json(item))
+   .catch(err=> res.status(404).json({ Success:false}));
+
      });
     
-    //  router.put("/item/:id", (req, res) => {
-    //   const id = req.params.parcelId;
-      
-    //   parcel.updateOne({ _id: id }, {
-    //       isCancelled: req.body.isCancelled,
-    //     })
-    //   .then(() => {
-    //    parcel.findOne({_id: id })
-    //    .then(result =>res.send(result))
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //     res.status(500).json({
-    //       error: err,
-    //       message:`server error`
-    //     });
-    //   });
-    // });
+     router.put("/:id", (req, res) => {
+      const id = req.params.id;
+      ItemModel.findOne({_id: id })
+       .then(itemId =>{
+         if (!itemId) {
+        return res.status(404).json(`no such id ${id}`);
+      }})
 
-export{Item, router}
+      ItemModel.updateOne({ _id: id }, {
+        name: req.body.name,
+        })
+        .then((itemId) => {
+          if (!itemId) {
+            return res.status(404).json(`no such id ${id}`);
+          }
+        })
+      .then(() => {
+       ItemModel.findOne({_id: id })
+       .then(result =>{res.status(200).json(result)})
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json({
+          error: err,
+          message:`Id is wrong`
+        });
+      });
+    });
+
+export default router

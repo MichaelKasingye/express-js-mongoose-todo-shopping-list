@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-// import {item} from './routes/items.js';
+import  itemsRoutes from './routes/items.js';
 const app = express();
 
 dotenv.config();
@@ -18,7 +18,7 @@ mongoose
 .catch(err => console.log('🚨 failed Server to connect..'+(err)));
  
 //Use Routes
-// app.use('/api/items',item);
+app.use('/',itemsRoutes);
 
 const port = process.env.PORT || 5000;
 app.listen(port,()=>
