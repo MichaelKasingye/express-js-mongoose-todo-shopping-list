@@ -1,20 +1,19 @@
 import express from "express";
 import { connectDB } from "./src/config/mongoose.js";
 import dotenv from "dotenv";
-// SET UP CORS
+import cors from "cors";
+
 import  itemsRoutes from './src/routes/items.js';
 import  loginUserRoutes from './src/routes/userlogin.js';
 import  imageRoutes from './src/routes/images.js';
 
 const app = express();
-
 dotenv.config();
-//Body parser Middleware
-app.use(express.json());
-
-
 connectDB()
 
+app.use(cors());
+//Body parser Middleware
+app.use(express.json());
 //Use Routes
 app.use('/',itemsRoutes);
 app.use('/',loginUserRoutes);
