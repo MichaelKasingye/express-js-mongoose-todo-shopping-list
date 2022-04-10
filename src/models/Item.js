@@ -8,10 +8,14 @@ const ItemSchema = new Schema({
         type:String,
         required: true
     },
+    description:{
+        type:String,
+        required: true
+    },
     date:{
         type:Date,
         default:Date.now
     }
 });
 
-export const ItemModel = mongoose.model('Item',ItemSchema);
+export const ItemModel = mongoose.model('item',ItemSchema);

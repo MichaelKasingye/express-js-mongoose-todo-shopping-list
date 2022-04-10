@@ -1,17 +1,18 @@
 import express from "express";
+const router = express.Router();
 import {ItemModel} from '../models/Item.js';
+import auth from '../middleware/auth.js';
 
- const router = express.Router();
 
 
-router.get('/',(req,res)=>{
+router.get('/', auth,(req,res)=>{
   ItemModel.find()
 .sort({date:-1})
 .then(items => res.json(items));
 });
 
 
-router.delete('/:id', (req,res)=>{
+router.delete('/:id', auth,(req,res)=>{
   ItemModel.findById(req.params.id)
    .then(item =>item.remove()
    .then(()=> res.json({Success:true})))
@@ -19,9 +20,10 @@ router.delete('/:id', (req,res)=>{
     });
     
 
-  router.post('/',(req,res)=>{
+  router.post('/', auth,(req,res)=>{
     const newItem = new ItemModel({
-        name: req.body.name
+        name: req.body.name,
+        description:req.body.name,
     });
     newItem
     .save()
@@ -30,7 +32,7 @@ router.delete('/:id', (req,res)=>{
 
      });
     
-     router.put("/:id", (req, res) => {
+     router.put("/:id", auth,(req, res) => {
       const id = req.params.id;
       ItemModel.findOne({_id: id })
        .then(itemId =>{
