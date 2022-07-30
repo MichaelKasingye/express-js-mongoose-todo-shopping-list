@@ -9,7 +9,7 @@ dotenv.config();
 app.use(express.json());
 
 //process.env.process
-let mongoString = process.env.MONGOD_MLAB;
+let mongoString = 'mongodb://mongo:27017/docker-node-mongo';
 
 //mongoose connect
 mongoose
